@@ -1,0 +1,227 @@
+
+<section class="content-header">
+
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12"> 
+            <div class="box">
+                <div class="box-header">
+                    <%= form_with url: orders_path, method: :get, local: true, class: "form-inline", id: 'search-form' do %>
+                        <div class="col-md-3 d-flex align-items-center">
+                            <label for="per_page" class="mr-2">Hiển thị:</label>
+                            <div class="input-group input-group-sm">
+                                <select name="per_page" class="form-control" onchange="this.form.submit();">
+                                <% [5, 10, 20, 50].each do |count| %>
+                                    <option value="<%= count %>" <%= 'selected' if @per_page== count %>>
+                                        <%= count %> dòng
+                                    </option>
+                                <% end %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                            <label for="status" class="mr-2">Trạng thái:</label>
+                            <div class="input-group input-group-sm">
+                                <select name="status" class="form-control" onchange="this.form.submit();">
+                                <% ["Chưa duyệt", "Đã duyệt", "Đã hủy", "Tất cả"].each do |status| %>
+                                    <option value="<%= status %>" <%= 'selected' if @status == status %>>
+                                    <%= status %>
+                                    </option>
+                                <% end %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                            <label for="shipping_date" class="mr-2">Ngày giao:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="date" name="shipping_date" class="form-control" onchange="this.form.submit();" value="<%= params[:shipping_date] %>">
+                            </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                            <label for="table_search" class="mr-2">Tìm kiếm:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="table_search" id="table-search" class="form-control" placeholder="Tìm kiếm..." value="<%= params[:table_search] %>">
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <button type="button" id="clear-search" class="btn btn-default" style="display: none;"><i class="fa fa-remove"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                  <% end %>
+                </div>
+                <br>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Người gửi</th>
+                            <th>Phone</th>
+                            <th>Người nhận</th>
+                            <th>Phone</th>
+                            <th>Địa chỉ</th>
+                            <th>Ngày đặt</th>
+                            <th>Ngày giao</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
+                            <th>Thực hiện</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% @orders.each_with_index do |order, index| %>
+                            <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= order.name %></td>
+                            <td><%= order.phone %></td>
+                            <td><%= order.shipping_name %></td>
+                            <td><%= order.shipping_phone %></td>
+                            <td><%= order.shipping_address %></td>
+                            <td><%= order.created_at.strftime("%d/%m/%Y") if order.created_at.present? %></td>
+                            <td><%= order.shipping_date.strftime("%d/%m/%Y") if order.shipping_date.present? %></td>
+                            <td><%= order.shipping_time %></td>
+                            <td>
+                                <% case order.status %>
+                                <% when 'pending' %>
+                                    <span class="label label-warning">Chưa duyệt</span>
+                                <% when 'approved' %>
+                                    <span class="label label-success">Đã duyệt</span>
+                                <% when 'cancelled' %>
+                                    <span class="label label-danger">Đã hủy</span>
+                                <% else %>
+                                    <span class="label label-primary">Không xác định</span>
+                                <% end %>
+                            </td>
+                            <td>
+                                <a href="/orders/<%= order.id %>" class="btn btn-primary" title="Chi tiết">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <% case order.status %>
+                                <% when 'pending' %>
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModalApproved" data-id="<%= order.id %>" title="Duyệt đơn">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                <% when 'approved' %>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalCancelled" data-id="<%= order.id %>" title="Hủy đơn">
+                                        <i class="fa fa-remove"></i>
+                                    </button>
+                                <% else %>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalDelete" data-id="<%= order.id %>" title="Xóa đơn">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <% end %>
+                            </td>
+                            </tr>
+                        <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-center">
+                <%= paginate @orders, params: params.to_unsafe_h %>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="myModalApproved" class="modal fade" role="dialog" data-id="0">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xác nhận duyệt đơn hàng?</h4>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có thật sự muốn duyệt đơn hàng này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Không</button>
+                <button type="button" class="btn btn-success">Có</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModalCancelled" class="modal fade" role="dialog" data-id="0">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xác nhận hủy đơn hàng?</h4>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có thật sự muốn hủy đơn hàng này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Không</button>
+                <button type="button" class="btn btn-danger delete">Có</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModalDelete" class="modal fade" role="dialog" data-id="0">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xác nhận xóa đơn hàng?</h4>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có thật sự muốn xóa đơn hàng này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Không</button>
+                <button type="button" class="btn btn-danger delete">Có</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%= content_for :scripts do %>
+    <script>
+        $('[data-toggle="modal"]').on('click', function() {
+            var orderId = $(this).data('id');
+            $('#myModalApproved').data('id', orderId);
+            $('#myModalCancelled').data('id', orderId);
+            $('#myModalDelete').data('id', orderId);
+        });
+
+        $('#myModalCancelled button.delete').on('click', function(e) {
+            e.preventDefault();
+            var orderId = $('#myModalCancelled').data('id');
+            window.location.href = '/order/' + orderId + '/cancelled/update_status';
+        });
+        $('#myModalApproved button.btn-success').on('click', function(e) {
+            e.preventDefault();
+            var orderId = $('#myModalApproved').data('id');
+            window.location.href = '/order/' + orderId + '/approved/update_status';
+        });
+        $('#myModalDelete button.delete').on('click', function(e) {
+            e.preventDefault();
+            var orderId = $('#myModalDelete').data('id');
+            window.location.href = '/order/' + orderId + '/delete';
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("table-search");
+            const clearButton = document.getElementById("clear-search");
+
+            function toggleClearButton() {
+                if (searchInput.value.trim() !== "") {
+                clearButton.style.display = "inline-block";
+                } else {
+                clearButton.style.display = "none";
+                }
+            }
+
+            searchInput.addEventListener("input", toggleClearButton);
+
+            clearButton.addEventListener("click", function () {
+                searchInput.value = ""; 
+                document.getElementById("search-form").submit(); 
+            });
+
+            toggleClearButton();
+        });
+    </script>
+<% end %>

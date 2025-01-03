@@ -1,0 +1,60 @@
+<%= form_with model: banner do |f| %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= f.label :name, "Tiêu đề" %>
+        <%= f.text_field :name, class: "form-control", placeholder: "Enter ...", required: true %>
+      </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :link, "Link" %>
+          <%= f.text_field :link, class: "form-control", placeholder: "Enter ..." %>
+        </div>
+      </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= f.label :featured_image, 'Hình ảnh', style: "display: block" %>
+        <%= f.file_field :featured_image, accept: "image/*", class: 'form-control', required: @banner.new_record? %>
+      </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+          <%= f.label :item, "Stt" %>
+          <%= f.number_field :item, step: :any, class: "form-control", placeholder: "0", required: true %>
+        </div>
+      </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+        <% if banner.featured_image.attached? && !banner.new_record? %>
+            <div class="form-group">
+              <img src="<%= url_for(banner.featured_image) %>" alt="Featured Image" width="100%">
+            </div>
+        <% end %>
+    </div>
+  </div>
+
+
+
+  <div class="row">
+    <div class="col-md-2">
+      <div class="form-group">
+        <%= f.label :active, "Hoạt động" %>
+        <%= f.check_box :active, {}, "1", "0" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= link_to "Cancel", banners_path, class: 'btn btn-danger' %>
+      <%= f.submit 'Lưu thông tin', class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>
+

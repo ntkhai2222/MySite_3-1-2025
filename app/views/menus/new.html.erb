@@ -1,0 +1,15 @@
+
+
+<% if @menu.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @menu.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+<% end %>
+<div class="box-body">
+    <%= render 'form', menu: @menu %>
+</div>
+

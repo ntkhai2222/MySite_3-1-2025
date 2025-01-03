@@ -1,0 +1,81 @@
+<%= content_for :styles do %>
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+<% end %>
+<%= form_with model: product do |form| %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :name, 'Tên sản phẩm' %>
+        <%= form.text_field :name, class: 'form-control', placeholder: 'Nhập tên sản phẩm...', required: true %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :inventory_count, 'Số lượng', style: "display: block" %>
+        <%= form.number_field :inventory_count, min: 0, class: 'form-control', placeholder: 'Nhập số lượng sản phẩm...' %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :price, 'Giá' %>
+        <%= form.number_field :price, min: 0, class: 'form-control', placeholder: 'Nhập giá sản phẩm...', required: true %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :discount, 'Giảm giá (%)' %>
+        <%= form.number_field :discount, min: 0, class: 'form-control', placeholder: 'Nhập phần trăm giảm giá...', required: true %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :featured_image, 'Hình ảnh', style: "display: block" %>
+        <%= form.file_field :featured_image, accept: "image/*", class: 'form-control', required: @product.new_record? %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :menu_id, 'Danh mục sản phẩm' %>
+        <%= form.select :menu_id, 
+                     options_for_select(
+                       @menus.flat_map { |menu| 
+                         [[menu.name, menu.id]] + menu.children.map { |child| ["-- #{child.name}", child.id] }
+                       }, 
+                       @product.menu_id
+                     ), 
+                     { include_blank: 'Chọn danh mục' }, 
+                     class: 'form-control', 
+                     required: true 
+        %>
+      </div>
+    </div>
+    <% if product.featured_image.attached? && !product.new_record? %>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <img src="<%= url_for(product.featured_image) %>" alt="Featured Image" width="70px" style="margin-left: 30px;">           
+        </div>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <%= form.label :description, style: "display: block" %>
+        <%= form.rich_text_area :description %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <%= link_to "Cancel", products_path, class: 'btn btn-danger' %>
+      <%= form.submit 'Lưu thông tin', class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>

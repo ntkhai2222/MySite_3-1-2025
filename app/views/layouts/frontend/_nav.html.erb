@@ -1,0 +1,38 @@
+<nav id="top">
+    <div class="container">
+        <div class="nav float-start">
+            <ul class="list-inline">
+                <li class="list-inline-item">HOTLINE: <a href="#">1900 123 456</a> | <a href="#">1900 789 123</a></li>
+            </ul>
+        </div>
+        <div class="nav float-end">
+            <ul class="list-inline">
+                <li class="list-inline-item">
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-user"></i> 
+                            <span class="d-none d-md-inline">Tài khoản</span> 
+                            <i class="fa-solid fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <% if current_user %>
+                                <li><%= link_to 'Tài khoản', account_index_path, class: 'dropdown-item' %></li>
+                                <li><a href="" class="dropdown-item">Lịch sử đơn hàng</a></li>
+                                <li><%= link_to 'Đăng xuất', account_logout_path, class: 'dropdown-item' %></li>
+                            <% else %>
+                                <li><%= link_to 'Đăng ký', home_register_path, class: 'dropdown-item' %></li>
+                                <li><%= link_to 'Đăng nhập', home_login_path, class: 'dropdown-item' %></li>
+                            <% end %>
+                        </ul>
+                    </div>
+                </li>
+                <li class="list-inline-item"><a href="/cart" title="Giỏ hàng"><i class="fa-solid fa-bag-shopping"></i> <span class="d-none d-md-inline">Giỏ hàng</span></a></li>
+                <% if cart_items.any? %> 
+                <li class="list-inline-item"><a href="/checkout" title="Thanh toán"><i class="fa-solid fa-share"></i> <span class="d-none d-md-inline">Thanh toán</span></a></li>
+                <% else %>
+                <li class="list-inline-item"><a href="/cart" title="Thanh toán"><i class="fa-solid fa-share"></i> <span class="d-none d-md-inline">Thanh toán</span></a></li>
+                <% end %>
+            </ul>
+        </div>
+    </div>
+</nav>

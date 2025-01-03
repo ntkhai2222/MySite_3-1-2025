@@ -1,0 +1,91 @@
+<%= content_for :title, "Giỏ hàng" %>
+<main>
+  <div class="container">
+    <%= render "layouts/frontend/alert" %>
+    <% if cart_items.any? %> 
+      <div class="row">
+        <div id="content" class="col mt-5">
+          <div id="shopping-cart">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <td class="text-center">Hình ảnh</td>
+                    <td class="text-start">Tên sản phẩm</td>
+                    <td class="text-start">Số lượng</td>
+                    <td class="text-end">Đơn giá</td>
+                    <td class="text-end">Tổng cộng</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% cart_items.each do |item| %>
+                    <tr>
+                      <input type="hidden" class="cart-product-id" value="<%= item[:id] %>">
+                      <td class="text-center">
+                        <%= link_to product_detail_path(id: item[:id], slug: item[:slug]) do %>
+                          <img src="<%= url_for(item[:image]) %>" alt="<%= item[:name] %>" title="<%= item[:name] %>" class="img-thumbnail">
+                        <% end %>
+                      </td>
+                      <td class="text-start text-wrap">
+                        <%= link_to item[:name], product_detail_path(id: item[:id], slug: item[:slug]), class: 'cart-item-name' %>
+                      </td>
+                      <td class="text-start">
+                        <form method="post">
+                          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                          <div class="input-group">
+                            <input type="number" name="quantity" value="<%= item[:quantity] %>" size="1" class="form-control" min="1">
+                            <input type="hidden" name="key" value="<%= item[:id].to_s %>">
+                            <button type="submit" formaction="/update_cart" data-bs-toggle="tooltip" title="Cập nhật" class="btn btn-success"><i class="fa-solid fa-rotate"></i></button>
+                            <button type="submit" formaction="/remove_from_cart" data-bs-toggle="tooltip" title="Loại bỏ" class="btn btn-danger"><i class="fa-solid fa-circle-xmark"></i></button>
+                          </div>
+                        </form>
+                        
+                      </td>
+                      <td class="text-end cart-item-price"><%= number_to_currency(item[:price], unit: 'VND', format: '%n %u', precision: 0) %></td>
+                      <td class="text-end"><%= number_to_currency(item[:price] * item[:quantity], unit: 'VND', format: '%n %u', precision: 0) %></td>                   
+                    </tr>
+                  <% end %>
+                </tbody>
+                <tfoot id="checkout-total">
+                  <tr>
+                    <td colspan="4" class="text-end"><strong>Tổng phụ</strong></td>
+                    <td class="text-end"><%= number_to_currency(cart_items.sum { |item| item[:price] * item[:quantity] }, unit: ' VND', format: '%n %u', precision: 0) %></td>
+                  </tr>
+                  <tr>
+                    <td colspan="4" class="text-end"><strong>Tổng cộng</strong></td>
+                    <td class="text-end"><%= number_to_currency(cart_items.sum { |item| item[:price] * item[:quantity] }, unit: ' VND', format: '%n %u', precision: 0) %></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+          <div class="d-inline-block pt-2 pd-2 w-100">
+            <div class="float-start">
+              <%= link_to 'Tiếp tục mua sắm', home_index_path, class: 'btn btn-light' %>
+            </div>
+            <div class="float-end">
+              <%= link_to 'Thanh toán', cart_checkout_path, class: 'btn btn-primary' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% else %>
+        <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"> </i></a></li>
+              <li class="breadcrumb-item"><a href="/cart">Giỏ hàng</a></li>
+            </ul>
+        <div class="row">
+          <div id="content" class="col">
+            <h1>Giỏ hàng</h1>
+            <p>Giỏ hàng của bạn đang trống!</p>
+            <div class="d-inline-block pt-2 pd-2 w-100">
+              <div class="float-end"><a href="/" class="btn btn-primary">Tiếp tục</a></div>
+            </div>
+            </div>
+          </div>
+      
+    <% end %>
+  </div>
+</main>
+  

@@ -1,0 +1,40 @@
+<main class="mb-3">
+  <div class="container stk-menu">
+    <nav id="menu" class="navbar navbar-expand-lg">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#narbar-menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="narbar-menu">
+        <ul class="nav navbar-nav">
+          <% @menuTree.each do |menu| %>
+            <li class="nav-item dropdown">
+              <a href="<%= product_menu_path(id: menu.id, slug: menu.slug) %>" class="nav-link dropdown-toggle">
+                <%= menu.name %>
+              </a>
+              <% if menu.children.any? %>
+                <div class="dropdown-menu">
+                  <div class="dropdown-inner">
+                    <ul class="list-unstyled">
+                      <% menu.children.each do |child| %>
+                        <li>
+                          <a href="<%= product_menu_path(id: child.id, slug: child.slug) %>" class="nav-link">
+                            <%= child.name %>
+                          </a>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="col-sm-12">
+    <p class="header-notice">
+      ĐẶT HOA ONLINE - GIAO MIỄN PHÍ TP HCM &amp; HÀ NỘI - GỌI NGAY 1900 123 456 HOẶC 1900 789 123
+    </p>
+  </div>
+</main>

@@ -1,0 +1,97 @@
+<%= content_for :title, 'Tìm kiếm' %>
+<style>
+    form#search {
+        all: unset;
+        all: revert;
+        display: contents;
+    }
+</style>
+<div id="product-category" class="container">
+    <div class="row">
+      <div id="content" class="col">
+        <h1><span class="category-title">Tìm kiếm: <%= @q %></span></h1>
+  
+        <div id="display-control" class="row">
+          <%= form_with url: home_search_path, method: :get, local: true, id: 'search' do %>
+            <div class="col-lg-3 offset-lg-6 me-3">
+                <div class="input-group mb-3">
+                <div class="input-group">
+                    <label for="sort" class="input-group-text">Sắp xếp theo</label>
+                    <select id="sort" name="sort" class="form-control" onchange="this.form.submit()" style="background: white">
+                        <% ["Mặc định", "Tên (A - Z)", "Tên (Z - A)", "Giá (Thấp - Cao)", "Giá (Cao - Thấp)"].each do |value| %>
+                            <option value="<%= value %>" <%= 'selected' if @sort == value %>>
+                                <%= value %>
+                            </option>
+                        <% end %>
+                    </select>
+                </div>
+                </div>
+            </div>
+          
+            <div class="col-lg-2 col-6">
+                <div class="input-group mb-3">
+                  <div class="input-group">
+                    <input type="text" name="q" value="<%= @q %>" hidden>
+                    <label for="per_page" class="input-group-text">Số lượng</label>
+                    <select id="per_page" name="per_page" class="form-control" onchange="this.form.submit()" style="background: white">
+                        <% [12, 20, 28].each do |value| %>
+                            <option value="<%= value %>" <%= 'selected' if @per_page == value %>>
+                                <%= value %>
+                            </option>
+                        <% end %>
+                    </select>
+                  </div>
+                </div>
+              </div>
+          <% end %>
+        </div>
+  
+        <div id="product-list" class="row row-cols-2 row-cols-sm-2 row-cols-md-2 row-cols-lg-4">
+          <% @products.each do |product| %>
+            <div class="col mb-3">
+              <%= form_with url: "#", method: :post do |form| %>
+                <div class="product-thumb po-relative">
+                  <div class="image p-relative">
+                    <%= link_to product_detail_path(id: product.id, slug: product.slug) do %>
+                      <img src="<%= url_for(product.featured_image) %>" alt="<%= product.name %>" title="<%= product.name %>" class="img-fluid lozad" width="261" height="326">
+                      <% if product.discount > 0 %>
+                        <span class="percent-off-rounded"><%= product.discount %>%<br />GIẢM</span>
+                      <% end %>
+                    <% end %>
+                  </div>
+  
+                  <div class="content">
+                    <div class="description">
+                      <h3><%= link_to product.name, product_detail_path(id: product.id, slug: product.slug), class: "product-item-title" %></h3>
+                      <div class="price">
+                        <% if product.discount > 0 %>
+                          <span class="price-new"><%= number_to_currency(product.price.to_f - (product.price.to_f * (product.discount / 100.0)), unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span>
+                          <span class="price-old"><%= number_to_currency(product.price.to_f, unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span>
+                        <% else %>
+                          <span class="price-new"><%= number_to_currency(product.price.to_f, unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span>
+                        <% end %>
+                      </div>
+                    </div>
+                    <div class="buynow-button text-center">
+                      <%= link_to 'ĐẶT HÀNG', product_detail_path(id: product.id, slug: product.slug) %>
+                    </div>
+                  </div>
+  
+                  <%= form.hidden_field :product_id, value: product.id %>
+                  <%= form.hidden_field :quantity, value: 1 %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+  
+          <% if @products.empty? %>
+            <p>No products found.</p>
+          <% end %>
+        </div>
+      </div>
+  
+      <div class="text-center">
+        <%= paginate @products %>
+      </div>
+    </div>
+</div>

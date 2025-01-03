@@ -1,0 +1,81 @@
+<%= content_for :title, "Đăng ký" %>
+<main>
+    <div id="account-register" class="container">
+        <%= render 'home/breadcrumb' %>
+        <%= render 'layouts/frontend/alert' %>
+      <div class="row">
+        <div id="content" class="col">
+          <h1>Đăng ký tài khoản</h1>
+          <p>Nếu bạn đã có tài khoản với chúng tôi, vui lòng đăng nhập tại <%= link_to 'trang đăng nhập', home_login_path %>.</p>
+          <%= form_with model: @user, url: home_customer_register_path, method: :post, local: true, id: 'form-register' do |form| %>
+            <fieldset id="account">
+              <legend>Thông tin cá nhân của bạn</legend>
+              <div class="row mb-3 required">
+                <%= form.label :name, 'Họ tên', class: 'col-sm-2 col-form-label' %>
+                <div class="col-sm-10">
+                  <%= form.text_field :name, placeholder: 'Họ tên', id: 'name', class: 'form-control', required: true %>
+                </div>
+              </div>
+              <div class="row mb-3 required">
+                <%= form.label :email_address, 'E-mail', class: 'col-sm-2 col-form-label' %>
+                <div class="col-sm-10">
+                  <%= form.email_field :email_address, placeholder: 'E-mail', id: 'input-email', class: 'form-control', required: true %>
+                </div>
+              </div>
+              <div class="row mb-3 required">
+                <%= form.label :phone, 'Điện thoại', class: 'col-sm-2 col-form-label' %>
+                <div class="col-sm-10">
+                  <%= form.telephone_field :phone, placeholder: 'Điện thoại', id: 'phone', class: 'form-control', required: true %>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Mật khẩu của bạn</legend>
+              <div class="row mb-3 required">
+                <%= form.label :password, 'Mật khẩu', class: 'col-sm-2 col-form-label' %>
+                <div class="col-sm-10">
+                  <%= form.password_field :password, placeholder: 'Mật khẩu', id: 'input-password', class: 'form-control', required: true %>
+                </div>
+              </div>
+              <div class="row mb-3 required">
+                <%= form.label :password_confirmation, 'Nhập lại mật khẩu', class: 'col-sm-2 col-form-label' %>
+                <div class="col-sm-10">
+                  <%= form.password_field :password_confirmation, placeholder: 'Nhập lại mật khẩu', id: 'input-password_confirmation', class: 'form-control', required: true %>
+                </div>
+              </div>
+            </fieldset>
+            <div class="d-inline-block pt-2 pd-2 w-100">
+              <div class="float-end text-right">
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    Tôi đã đọc và đồng ý với
+                    <a class="modal-link" data-bs-target="#modal-information" style="cursor: pointer;">
+                      <b> Điều khoản &amp; Điều kiện </b>
+                    </a>
+                  </label>
+                  <%= form.check_box :agree, class: 'form-check-input', required: true %>
+                </div>
+                <%= form.submit 'Tiếp tục', class: 'btn btn-primary' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <%= render 'home/aside' %>
+      </div>
+    </div>
+  </main>
+  <div id="modal-information" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Điều khoản &amp; Điều kiện</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <% @pages.each do |page| %>
+                <p style="text-align:center"><a href="/page/<%= page.slug %>" rel="nofollow" target="_blank"><%= page.name  %></a></p>
+              <% end %>
+            </div>
+        </div>
+    </div>
+</div>

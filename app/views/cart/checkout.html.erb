@@ -1,0 +1,195 @@
+<%= content_for :title, "Thanh toán" %>
+<style>
+    form[action="<%= cart_pay_path %>"] {
+    all: unset;
+    all: revert;
+    display: contents;
+    }
+</style>
+<main>
+    <div id="checkout-checkout" class="container">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"> </i></a></li>
+            <li class="breadcrumb-item"><a href="/cart">Giỏ hàng</a></li>
+            <li class="breadcrumb-item"><a href="/checkout">Thanh toán</a></li>
+        </ul>
+        <%= render "layouts/frontend/alert" %>
+        <div class="row">
+            <div id="content" class="col mt-5">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div id="ckh_step_1">
+                            <div id="checkout-register">
+                                <form action="<%= cart_pay_path %>" method="post" id="order_form">
+                                    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                                    <input type="hidden" name="order_total" value="<%= cart_items.sum { |item| item[:price] * item[:quantity] } %>">
+                                    <fieldset>
+                                        <legend>Thông tin người gửi</legend>
+                                        <div class="row row-cols-1 row-cols-md-2">
+                                            <div class="col mb-3 required">
+                                                <label for="name" class="form-label">Họ tên</label> 
+                                                <input type="text" name="name" autocomplete="off" value="<%= params[:name] %>" placeholder="Họ tên" id="name" class="form-control" required>
+                                            </div>
+                                            <div class="col mb-3 required">
+                                                <label for="phone" class="form-label">Điện thoại</label>
+                                                <input type="tel" name="phone" autocomplete="off" value="<%= params[:phone] %>" placeholder="Điện thoại" id="phone" class="form-control" required>
+                                            </div>
+                                            <div class="col col-md-12 mb-3 required">
+                                                <label for="email" class="form-label">Email</label> 
+                                                <input type="email" name="email" autocomplete="off" value="<%= params[:email] %>" placeholder="Email" id="email" class="form-control" required>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset id="shipping-address" class="section-shipping-address" style="display: block;">
+                                        <legend>Thông tin người nhận</legend>
+                                        <div class="row row-cols-1 row-cols-md-2">
+                                            <div class="col mb-3 required order-1">
+                                                <label for="shipping_name" class="form-label">Họ tên</label> 
+                                                <input type="text" name="shipping_name" autocomplete="off" value="<%= params[:shipping_name] %>" placeholder="Họ tên" id="shipping_name" class="form-control" required>
+                                            </div>
+                                            <div class="col col-md-12 mb-3 required order-3">
+                                                <label for="shipping_address" class="form-label">Địa chỉ</label> 
+                                                <input type="text" name="shipping_address" autocomplete="off" value="<%= params[:shipping_address] %>" placeholder="Địa chỉ" id="shipping_address" class="form-control" required>
+                                            </div>
+                                            <div class="col mb-3 custom-field custom-field-29 required">
+                                                <label for="shipping_phone" class="form-label">Điện thoại</label> 
+                                                <input type="tel" autocomplete="off" name="shipping_phone" value="<%= params[:shipping_phone] %>" placeholder="Điện thoại" id="shipping_phone" class="form-control" required>
+                                            </div>
+                                            <div class="col mb-3 custom-field custom-field-31 required">
+                                                <label for="shipping_date" class="form-label">Ngày giao hàng</label>
+                                                <div class="input-group">
+                                                    <input type="date" name="shipping_date" value="<%= params[:shipping_date] %>" placeholder="Ngày giao hàng" id="shipping_date" class="form-control date" required>
+                                                </div>
+                                            </div>
+                                            <div class="col mb-3 custom-field custom-field-32 required">
+                                                <label for="shipping_time" class="form-label">Thời gian giao hàng</label> 
+                                                <select name="shipping_time" id="shipping_time" class="form-select" required>
+                                                    <option value="07:00">07:00</option>
+                                                    <option value="08:00">08:00</option>
+                                                    <option value="09:00">09:00</option>
+                                                    <option value="10:00">10:00</option>
+                                                    <option value="11:00">11:00</option>
+                                                    <option value="12:00">12:00</option>
+                                                    <option value="13:00">13:00</option>
+                                                    <option value="14:00">14:00</option>
+                                                    <option value="15:00">15:00</option>
+                                                    <option value="16:00">16:00</option>
+                                                    <option value="17:00">17:00</option>
+                                                    <option value="18:00">18:00</option>
+                                                    <option value="19:00">19:00</option>
+                                                    <option value="20:00">20:00</option>
+                                                    <option value="21:00">21:00</option>
+                                                    <option value="Từ 8:00 - 12:00">Từ 8:00 - 12:00</option>
+                                                    <option value="Từ 12:00 - 20:00">Từ 12:00 - 20:00</option>
+                                                    <option value="Từ 8:00 - 20:00">Từ 8:00 - 20:00</option>
+                                                </select>
+                                            </div>
+                                            <div class="col col-md-12 mb-3 custom-field custom-field-33">
+                                                <label for="shipping_mess" class="form-label">Lời nhắn [Cho người nhận]</label> 
+                                                <textarea name="shipping_mess" rows="2" placeholder="" id="shipping_mess" class="form-control"></textarea>
+                                            </div>
+                                            <div class="col col-md-12 mb-3 custom-field custom-field-34">
+                                                <label for="shipping_note" class="form-label">Yêu cầu, lưu ý [cho flowercorner.vn]</label> 
+                                                <textarea name="shipping_note" rows="2" placeholder="" id="shipping_note" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ckh_step_2" class="col-md-5">
+                        <div id="checkout-confirm">
+                            <legend>Chi tiết đơn hàng</legend>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <td class="text-start" style="min-width:80px">Hình ảnh</td>
+                                            <td class="text-start">Tên sản phẩm</td>
+                                            <td class="text-end">Tổng cộng</td>
+                                            <td class="text-end"></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% cart_items.each do |item| %>
+                                        <tr>
+                                            <td class="text-center"> 
+                                                <%= link_to product_detail_path(id: item[:id], slug: item[:slug]) do %>
+                                                <img src="<%= url_for(item[:image]) %>" alt="<%= item[:name] %>" title="<%= item[:name] %>" class="img-thumbnail">
+                                                <% end %>
+                                            </td>
+                                            <td class="text-start">
+                                                <span class="cart-item-quantity"><%= item[:quantity] %></span> x
+                                                <%= link_to product_detail_path(id: item[:id], slug: item[:slug]) do %>
+                                                <%= item[:name] %>
+                                                <% end %>
+                                            </td>
+                                            <td class="text-end"><%= number_to_currency(item[:price] * item[:quantity], unit: 'VND', format: '%n %u', precision: 0) %></td>
+                                            <td class="text-end">
+                                                <form action="/remove_from_cart" method="post">
+                                                    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                                                    <input type="hidden" name="key" value="<%= item[:id].to_s %>">
+                                                    <button type="submit" data-bs-toggle="tooltip" title="Loại bỏ" class="btn btn-sm btn-danger">
+                                                        <i class="fa-solid fa-circle-xmark"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2" class="text-end"><strong>Tổng phụ</strong></td>
+                                            <td class="text-end" colspan="2"><%= number_to_currency(cart_items.sum { |item| item[:price] * item[:quantity] }, unit: ' VND', format: '%n %u', precision: 0) %></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="text-end"><strong>Tổng cộng</strong></td>
+                                            <td class="text-end" colspan="2"><%= number_to_currency(cart_items.sum { |item| item[:price] * item[:quantity] }, unit: ' VND', format: '%n %u', precision: 0) %></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row mb-3">
+                                        <label for="input-coupon" class="col-md-3 col-form-label">Mã giảm giá</label>
+                                        <div class="col-md-6 mb-3">
+                                            <input type="text" name="discount" value="" placeholder="Mã giảm giá" id="input-coupon" class="form-control">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-end"><button type="submit" class="btn btn-primary">Áp dụng</button></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="checkout-payment-method" class="mb-4">
+                            <div class="mb-2 mt-3">
+                                <div class="form-check text-end">
+                                    <input type="checkbox" name="agree" value="1" id="input-agree" class="form-check-input" checked="" required>
+                                    <label for="input-agree" class="form-check-label">Tôi đã đọc và đồng ý với 
+                                    <a href="" class="modal-link"> <b> Điều khoản &amp; Điều kiện </b> </a>
+                                    </label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="text-end"><button type="submit" id="button_order" class="btn btn-primary">Xác nhận đơn hàng</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    document.getElementById('button_order').addEventListener('click', function(event) {
+      var form = document.getElementById('order_form');
+      
+      if (form.checkValidity()) {
+        form.submit();
+      } else {
+        form.reportValidity();
+      }
+    });
+</script>

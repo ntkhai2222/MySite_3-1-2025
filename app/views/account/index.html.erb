@@ -1,0 +1,24 @@
+<%= content_for :title, "My Account" %>
+
+<main>
+  <div id="account-account" class="container">
+    <%= render "account/breadcrumb" %>
+    <%= render "layouts/frontend/alert" %>
+
+    <div class="row">
+      <div id="content" class="col">
+        <h2>Tài khoản của tôi</h2>
+        <ul class="list-unstyled">
+          <li><%= link_to "Chỉnh sửa thông tin tài khoản của bạn", account_edit_path %></li>
+          <li><%= link_to "Thay đổi mật khẩu của bạn", account_password_path %></li>
+        </ul>
+
+        <h2>Đơn đặt hàng của tôi</h2>
+        <ul class="list-unstyled">
+          <li><%= link_to "Xem lịch sử đặt hàng của bạn", "#" %></li>
+        </ul>
+      </div>
+      <%= render "account/aside" %>
+    </div>
+  </div>
+</main>

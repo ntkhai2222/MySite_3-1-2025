@@ -1,0 +1,45 @@
+<%= content_for :title, "Đăng nhập" %>
+<main>
+    <div id="account-login" class="container">
+      <%= render 'home/breadcrumb' %>
+      <%= render 'layouts/frontend/alert' %>
+      <div class="row">
+        <div id="content" class="col">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h2>Khách hàng mới</h2>
+                  <p><strong>Đăng ký tài khoản</strong></p>
+                  <p>Bằng cách tạo tài khoản, bạn sẽ có thể mua sắm nhanh hơn, cập nhật trạng thái đơn hàng và theo dõi các đơn hàng bạn đã thực hiện trước đó.</p>
+                  <%= link_to "Tiếp tục", home_register_path, class: "btn btn-primary" %>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card mb-3">
+                <div class="card-body">
+                    <%= form_with url: home_customer_login_path do |f| %>
+                      <h2>Phản hồi khách hàng</h2>
+                        <p><strong>Tôi là một khách hàng cũ</strong></p>
+                      <div class="mb-3">
+                        <%= f.label :email_address, "Địa chỉ email", class: "col-form-label" %>
+                        <%= f.text_field :email_address, placeholder: "Địa chỉ email", id: "input-email", class: "form-control" %>
+                      </div>
+                      <div class="mb-3">
+                        <%= f.label :password, "Mật khẩu", class: "col-form-label" %>
+                        <%= f.password_field :password, placeholder: "Mật khẩu", id: "input-password", class: "form-control" %><br/>
+                        <%= link_to "Đã quên mật khẩu", passwords_path %>
+                      </div>
+                    <%= f.submit "Đăng nhập", class: "btn btn-primary" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%= render 'home/aside' %>
+      </div>
+    </div>
+  </main>
+  

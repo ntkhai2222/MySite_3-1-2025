@@ -1,0 +1,241 @@
+<%= content_for :title, @product.name %>
+<main>
+  <div id="product-info" class="container mt-4">
+    <%= render "layouts/frontend/alert" %>
+    <div class="row">
+      <div id="content" class="col">
+        <div class="row mb-3">
+          <div class="col-sm">
+            <div class="image magnific-popup">
+              <a href="<%= url_for(@product.featured_image) %>" title="<%= @product.name %>">
+                <img src="<%= url_for(@product.featured_image) %>" title="<%= @product.name %>" alt="<%= @product.name %>" class="img-thumbnail mb-3" />
+              </a>
+            </div>
+          </div>
+          <div class="col-sm po-relative">
+            <h1 class="product-name"><%= @product.name %></h1>
+            <ul class="list-unstyled price-box">
+              <% if @product.discount > 0 %>
+                <li>
+                  <h3><span class="price-old"><%= number_to_currency(@product.price.to_f, unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span></h3>
+                </li>
+                <li>
+                  <h3><span class="price-new"><%= number_to_currency(@product.price.to_f - (@product.price.to_f * (@product.discount / 100.0)), unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span></h3>
+                </li>
+                <span class="percent_off"><%= @product.discount %> % GIẢM</span>
+              <% else %>
+                <li>
+                  <h3><span class="price-new"><%= number_to_currency(@product.price.to_f, unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span></h3>
+                </li>
+              <% end %>
+            </ul>
+
+            <div class="coupon_box">
+              <div class="coupon_slider"></div>
+              <div class="coupon_box_detail"></div>
+            </div>
+
+            <div class="call_us_box">
+              Gọi ngay: <span class="call-us">1900 123 456</span>
+            </div>
+
+            <div class="call_us_box call_social">
+                Chat ngay:
+                <a href="" ><img src="https://www.flowercorner.vn/image/icon/ms.png" alt="messenger" /></a>
+                <a href="" ><img src="https://www.flowercorner.vn/image/icon/zalo.png" alt="zalo" /></a>
+                <a href="" ><img src="https://www.flowercorner.vn/image/icon/zalo.png" alt="zalo" /></a>
+                <a href="" ><img src="https://www.flowercorner.vn/image/icon/zalo.png" alt="zalo" /></a>
+                <a href="" ><img src="https://www.flowercorner.vn/image/icon/zalo.png" alt="zalo" /></a>
+            </div>
+
+            <div class="call_us_box ship_box">
+              Vận chuyển: <span class="free-ship">Miễn phí giao hoa khu vực nội thành TP.HCM & Hà Nội</span>
+            </div>
+            <div class="ship_box_detail row">
+              <div class="col-sm-6 mt-2 mb-2">
+                <select class="form-select ship-to-region"></select>
+              </div>
+              <div class="col-sm-6 mt-2 mb-2">
+                <select class="form-select ship-to-district"></select>
+              </div>
+              <p class="ship_message">Phí giao hàng: <span class="ship_fee">Miễn phí!</span></p>
+            </div>
+            <% if @product.inventory_count? %>
+              <p><b><u>In stock</u> : <%= @product.inventory_count %></b></p>
+              <div id="product">
+                <%= form_with url: cart_add_path, method: :post, local: true do |f| %>
+                  <div class="mb-3">
+                    <p class="mb-0"><label for="input-quantity" class="form-label">Qty</label></p>
+                    <%= f.number_field :quantity, min: 1, value: 1, size: 2, id: "input-quantity", class: "form-control" %>
+                    <%= hidden_field_tag :product_id, @product.id, id: "input-product-id" %>
+                    <%= f.submit "Đặt hàng", class: "btn btn-primary btn-lg btn-block" %>
+                    <%= button_tag "Đặt nhanh", type: "button", rel: @product.id, class: "btn btn-primary btn-lg btn-block" %>
+                  </div>
+                <% end %>
+
+              </div>
+              <div class="pdp-featured">
+                <div class="pdp-featured-item">
+                  <img src="https://www.flowercorner.vn/image/icon/60mins.png" alt="Giao hoa nhanh 60 phút" />
+                  <span>Giao hoa NHANH trong 60 phút</span>
+                </div>
+                <div class="pdp-featured-item">
+                  <img src="https://www.flowercorner.vn/image/icon/freegifts.png" alt="Tặng miễn phí thiệp hoặc banner" />
+                  <span>Tặng miễn phí thiệp hoặc banner</span>
+                </div>
+              </div>
+            <% else %>
+              <b>
+                <p>Out of stock</p>
+                <p>Email me when available.</p>
+              </b>
+              
+              <%= form_with model: [@product, Subscriber.new], class: "d-flex align-items-center gap-2" do |form| %>
+                <%= form.email_field :email, placeholder: "you@example.com", required: true, class: 'form-control me-2' %>
+                <%= form.submit "Submit", class: "btn btn-primary" %>
+              <% end %>
+
+            <% end %>
+            
+          </div>
+        </div>
+
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a href="#tab-description" data-bs-toggle="tab" class="nav-link active">Mô tả sản phẩm</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div id="tab-description" class="tab-pane fade show active mb-4">
+            <%= raw @product.description %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if @products.any? %>
+    <h3>Sản phẩm liên quan</h3>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
+      <% @products.each do |item| %>
+        <div class="col">
+          <div class="product-thumb po-relative">
+            <div class="image p-relative">
+              <a href="<%= product_detail_path(id: item.id, slug: item.slug) %>">
+                <img src="<%= url_for(item.featured_image) %>" alt="<%= item.name %>" width="261" height="326" class="img-fluid" />
+                <% if item.discount > 0 %>
+                  <span class="percent-off-rounded"><%= item.discount %>% GIẢM</span>
+                <% end %>
+              </a>
+            </div>
+            <div class="content">
+              <div class="description">
+                <h3><a href="<%= product_detail_path(id: item.id, slug: item.slug) %>" class="product-item-title"><%= item.name %></a></h3>
+                <div class="price">
+                  <% if item.discount > 0 %>
+                    <span class="price-new"><%= number_to_currency(item.price.to_f - (item.price.to_f * (item.discount / 100.0)), unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span>
+                    <span class="price-old"><%= number_to_currency(item.price.to_f, unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span>
+                  <% else %>
+                    <span class="price-new"><%= number_to_currency(item.price.to_f, unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span>
+                  <% end %>
+                </div>
+              </div>
+              <div class="buynow-button text-center">
+                <a href="<%= product_detail_path(id: item.id, slug: item.slug) %>">ĐẶT HÀNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <br>
+    <br>
+    <% end %>
+    <h3>Sản phẩm được xem nhiều nhất</h3>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
+      <% @top_view_products.each do |item| %>
+        <div class="col">
+          <div class="product-thumb po-relative">
+            <div class="image p-relative">
+              <a href="<%= product_detail_path(id: item.id, slug: item.slug) %>">
+                <img src="<%= url_for(item.featured_image) %>" alt="<%= item.name %>" width="261" height="326" class="img-fluid" />
+                <% if item.discount > 0 %>
+                  <span class="percent-off-rounded"><%= item.discount %>% GIẢM</span>
+                <% end %>
+              </a>
+            </div>
+            <div class="content">
+              <div class="description">
+                <h3><a href="<%= product_detail_path(id: item.id, slug: item.slug) %>" class="product-item-title"><%= item.name %></a></h3>
+                <div class="price">
+                  <% if item.discount > 0 %>
+                    <span class="price-new"><%= number_to_currency(item.price.to_f - (item.price.to_f * (item.discount / 100.0)), unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span>
+                    <span class="price-old"><%= number_to_currency(item.price.to_f, unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span>
+                  <% else %>
+                    <span class="price-new"><%= number_to_currency(item.price.to_f, unit: ' VND', format: '%n %u', precision: 0, precision: 0) %></span>
+                  <% end %>
+                </div>
+              </div>
+              <div class="buynow-button text-center">
+                <a href="<%= product_detail_path(id: item.id, slug: item.slug) %>">ĐẶT HÀNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div id="quickOrder" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">ĐẶT HOA NHANH</h4>
+        </div>
+        <form id="quickOrderForm" novalidate>
+          <div class="modal-body">
+            <div>
+              Quý khách vui lòng điền thông tin bên dưới và bấm nút đặt hàng, nhân viên chúng tôi sẽ gọi quý khách
+              trong ít phút để hỗ trợ đặt hàng:
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 order-md-1">
+                <input type="hidden" class="form-control" id="product-name-model"
+                  value="Kiss Me - Mã sản phẩm: BOUQUET-9030">
+                <div class="row mt-3">
+                  <div class="col-md-6 mb-6">
+                    <div class="mb-3">
+                      <label for="sender">Họ tên</label>
+                      <input type="text" class="form-control" id="sender" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-6">
+                    <div class="mb-3">
+                      <label for="senderphone">Số điện thoại</label>
+                      <input type="text" class="form-control" id="senderphone" placeholder="" value="" required>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 mb-6">
+                    <div class="g-recaptcha" data-sitekey="6LeQyycpAAAAAMghgRAuDG-4q6XWEeVxnJtIgY1Y"></div>
+                  </div>
+
+                </div>
+                <div class="row mt-3">
+                  <div class="col-md-12 mb-6">
+                    * Đặt hoa nhanh từ 7:00-20:00
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" data-bs-dismiss="modal">HUỶ</button>
+            <button class="btn btn-primary btn-lg btn-block btn-sm" type="submit">GỬI ĐƠN HÀNG</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/assets/frontend/js/detail/script1.js"></script>
+</main>

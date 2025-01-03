@@ -1,0 +1,28 @@
+
+<%= form_with model: menu do |form| %>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= form.label :name, "Tên danh mục" %>
+          <%= form.text_field :name, class: 'form-control', placeholder: 'Enter ...', required: true %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <%= form.label :menu_fk, "Thuộc danh mục" %>
+          <%= form.select :menu_fk, options_for_select([['Danh mục cấp đầu', 0]] + @menus.map { |menu| [menu.name, menu.id] }, @menu.menu_fk), { include_blank: true }, class: 'form-control select2', required: true %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <%= link_to "Cancel", menus_path, class: 'btn btn-danger' %>
+        <%= form.submit 'Lưu thông tin', class: 'btn btn-success' %>
+      </div>
+    </div>
+<% end %>
+

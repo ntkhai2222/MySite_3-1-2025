@@ -1,0 +1,95 @@
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Thông tin đơn hàng</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Người gửi:</strong> <%= @order.name %></p>
+                                <p><strong>Phone:</strong> <%= @order.phone %></p>
+                                <p><strong>Email:</strong> <%= @order.email %></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Người nhận:</strong> <%= @order.shipping_name %></p>
+                                <p><strong>Phone:</strong> <%= @order.shipping_phone %></p>
+                                <p><strong>Địa chỉ:</strong> <%= @order.shipping_address %></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Ngày giao:</strong> <%= @order.shipping_date.strftime("%d/%m/%Y") if @order.shipping_date.present? %></p>
+                                <p><strong>Thời gian:</strong> <%= @order.shipping_time %></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Lời nhắn:</strong> <%= @order.shipping_mess %></p>
+                                <p><strong>Lưu ý:</strong> <%= @order.shipping_note %></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p><strong>Trạng thái:</strong> 
+                                    <% case @order.status %>
+                                    <% when 'pending' %>
+                                        <span class="label label-warning">Chưa duyệt</span>
+                                    <% when 'approved' %>
+                                        <span class="label label-success">Đã duyệt</span>
+                                    <% when 'cancelled' %>
+                                        <span class="label label-danger">Đã hủy</span>
+                                    <% end %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Danh sách sản phẩm</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Đơn giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% @order.order_details.each_with_index do |item, index| %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td><img src="<%= url_for(item.featured_image) %>" alt="<%= item.name %>" width="50"></td>
+                                        <td><%= item.name %></td>
+                                        <td><%= number_to_currency(item.price.to_f, unit: ' VND', format: '%n %u', precision: 0) %></td>
+                                        <td><%= item.quantity %></td>
+                                        <td><%= number_to_currency(item.price.to_f * item.quantity, unit: ' VND', format: '%n %u', precision: 0) %></td>
+                                    </tr>
+                                <% end %>
+                                <tr>
+                                    <td colspan="5" style="text-align: right;"><b>Tổng tiền: </b></td>
+                                    <td><%= number_to_currency(@order.order_total, unit: ' VND', format: '%n %u', precision: 0) %></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="<%= orders_path %>" class="btn btn-danger">Quay lại</a>
+            <% case @order.status %>
+            <% when 'pending' %>
+                <a href="<%= order_update_status_path(id: @order.id, status: 'approved') %>" class="btn btn-success">Duyệt đơn</a>
+            <% when 'approved' %>
+                <a href="<%= order_update_status_path(id: @order.id, status: 'cancelled') %>" class="btn btn-danger">Hủy đơn</a>
+            <% end %>
+        </div>
+    </div>
+</section>

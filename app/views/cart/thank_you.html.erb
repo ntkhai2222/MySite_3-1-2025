@@ -1,0 +1,23 @@
+<%= content_for :title, "Thank You" %>
+<main>
+    <div id="common-success" class="container mt-4">
+        <div class="row">
+            <div id="content" class="col text-center">
+                <p> Xin Cảm ơn quý khách. </p>
+                <p> Bạn đã thanh toán đơn hàng thành công. </p>
+                <br>
+                <img src="/thank_you.png" alt="Thanh You" class="img-fluid" width="100">
+                <br>
+                <br>
+                <div class="d-inline-block pt-2 pd-2 w-100 ">
+                    <div class="text-center"><a href="/" class="btn btn-primary">Tiếp tục</a></div>
+                </div>
+            </div>
+            <% if current_user %>
+                <%= render 'account/aside' %>
+            <% else %>
+                <%= render 'home/aside' %>
+            <% end %>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,29 @@
+<footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.4.0
+    </div>
+    <strong>Copyright &copy; 2022 <a href="#">banatgt.baria-vungtau.gov.vn</a>.</strong> All rights reserved.
+</footer>
+<script src="/assets/backend/themes/bower_components/jquery/dist/jquery.min.js" data-turbolinks-track="reload"></script>
+<script src="/assets/backend/themes/bower_components/bootstrap/dist/js/bootstrap.min.js" data-turbolinks-track="reload"></script>
+<script src="/assets/backend/themes/bower_components/jquery-slimscroll/jquery.slimscroll.min.js" data-turbolinks-track="reload"></script>
+<script src="/assets/backend/themes/bower_components/fastclick/lib/fastclick.js" data-turbolinks-track="reload"></script>
+<script src="/assets/backend/themes/dist/js/adminlte.min.js" data-turbolinks-track="reload"></script>
+<script src="/assets/backend/themes/dist/js/demo.js" data-turbolinks-track="reload"></script>
+<script src="/assets/backend/themes/bower_components/datatables.net/js/jquery.dataTables.min.js" data-turbolinks-track="reload"></script>
+<script src="/assets/backend/themes/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js" data-turbolinks-track="reload"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const alertElement = document.querySelector(".alert");
+    if (alertElement) {
+      alertElement.classList.add("show");
+      setTimeout(() => {
+        alertElement.classList.remove("show");
+        alertElement.style.display = "none"; // Ẩn hoàn toàn
+      }, 4000); // 4 giây
+    }
+  });
+
+</script>
+<%= yield :scripts %>
+  

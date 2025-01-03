@@ -1,0 +1,73 @@
+<%= form_with model: user do |form| %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :name, 'Họ Tên' %>
+        <%= form.text_field :name, class: 'form-control', placeholder: 'Nhập tên...', required: true %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :email_address, 'Email' %>
+        <%= form.text_field :email_address, class: 'form-control', placeholder: 'Nhập email...', required: true %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :phone, 'Phone' %>
+        <%= form.text_field :phone, class: 'form-control', placeholder: 'Nhập phone...', required: true %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :password, 'Password' %>
+        <%= form.password_field :password, class: 'form-control', placeholder: 'Nhập password...', 
+            required: @user.new_record? %> 
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :featured_image, 'Hình ảnh', style: "display: block" %>
+        <%= form.file_field :featured_image, accept: "image/*", class: 'form-control', required: @user.new_record?  %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :password_confirmation, 'Password Confirmation' %>
+        <%= form.password_field :password_confirmation, class: 'form-control', placeholder: 'Nhập lại password...', 
+            required: @user.new_record? %>
+      </div>
+    </div>
+  </div>
+  
+
+    <div class="row">
+        <div class="col-md-6">
+            <% if user.featured_image.attached? && !user.new_record? %>
+            <div class="form-group">
+              <img src="<%= url_for(user.featured_image) %>" alt="Featured Image" width="70px">
+            </div>
+            <% end %>
+        </div>
+        <% if Current.user.super_user == 1 %>
+        <div class="col-md-6">
+          <div class="form-group">
+              <%= form.label :super_user, "Super Admin" %>
+              <%= form.check_box :super_user, class: 'flat-red' %>
+          </div>
+        </div>
+        <% end %>
+    </div>
+  
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= link_to "Cancel", users_path, class: 'btn btn-danger' %>
+      <%= form.submit 'Lưu thông tin', class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>

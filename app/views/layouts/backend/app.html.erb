@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <%= render 'layouts/backend/head' %>
+  <body class="hold-transition skin-blue fixed sidebar-mini">
+    <div id="wrapper">
+      <%= render 'layouts/backend/header' %>
+      <%= render 'layouts/backend/sidebar' %>
+
+      <div class="content-wrapper">
+        <% if notice || alert %>
+          <div class="alert <%= notice ? 'alert-success' : 'alert-danger' %>">
+            <%= notice || alert %>
+          </div>
+        <% end %>
+        <%= yield %>
+      </div>
+    </div>
+    <%= render 'layouts/backend/footer' %>
+  </body>
+</html>

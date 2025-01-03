@@ -1,0 +1,108 @@
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mt-2">
+                <div class="go-social">
+                    <a href="">
+                        <i class="fa-brands fa-facebook fa-2xl"></i>
+                    </a>
+                    <a href="">
+                        <i class="fa-brands fa-twitter fa-2xl"></i>
+                    </a>
+                    <a href="">
+                        <i class="fa-brands fa-instagram fa-2xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div id="logo">
+                    <%= link_to image_tag("/shop-hoa-tuoi-flowercorner-logo.png.webp", 
+                        title: "FlowerCorner.vn - Shop hoa tươi", 
+                        alt: "FlowerCorner.vn - Shop hoa tươi", 
+                        class: "img-fluid", 
+                        width: 300, 
+                        height: 62), home_index_path %>
+                </div>
+            </div>
+            <div class="col-md-4 mt-2 hide-mobile">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div id="search" class="input-group mb-3">
+                          <%= form_with url: home_search_path, method: :get, local: true, class: "w-100" do %>
+                            <input type="text" name="q" placeholder="Tìm kiếm" class="form-control form-control-lg" value="<%= params[:q] %>" maxlength="50">
+                            <button type="submit" data-lang="vi-vn" class="search-button">
+                              <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                          <% end %>
+                        </div>    
+                    </div>
+                    <div class="col-sm-2" id="header-cart">
+                        <div class="dropdown d-grid">
+                            <button type="button" data-bs-toggle="dropdown" class="btn btn-inverse btn-block dropdown-toggle">
+                              <i class="fa-solid fa-bag-shopping"></i>
+                            </button>
+                            <span class="mini-cart-count"><%= cart_items.count %></span>
+                          
+                            <ul class="dropdown-menu dropdown-menu-right" style="width: 500px; position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(9px, 41px, 0px);" data-popper-placement="bottom-end">
+                              <li>
+                                <% if cart_items.any? %>
+                                  <table class="table table-sm table-striped mini-tbl-product">
+                                    <tbody>
+                                      <% cart_items.each_with_index do |item, index| %>
+                                        <tr>
+                                          <td class="text-center">
+                                            <a href="<%= product_detail_path(id: item[:id], slug: item[:slug]) %>">
+                                              <img src="<%= url_for(item[:image]) %>" alt="<%= item[:name] %>" title="<%= item[:name] %>" class="img-thumbnail">
+                                            </a>
+                                          </td>
+                                          <td class="text-start">
+                                            <a href="<%= product_detail_path(id: item[:id], slug: item[:slug]) %>"><%= item[:name] %></a>
+                                          </td>
+                                          <td class="text-end">x <%= item[:quantity] %></td>
+                                          <td class="text-end"><%= number_to_currency(item[:price] * item[:quantity], unit: 'VND', format: '%n %u', precision: 0) %></td>
+                                          <td class="text-end">
+                                            <%= form_with url: cart_remove_path, method: :post, data: { oc_target: "#header-cart" }, class: "d-inline" do |f| %>
+                                            <%= hidden_field_tag :key, item[:id].to_s %>
+                                            <button type="submit" data-bs-toggle="tooltip" class="btn btn-danger" aria-label="Loại bỏ">
+                                                <i class="fa-solid fa-circle-xmark"></i>
+                                            </button>
+                                            <% end %>
+                                          </td>
+                                        </tr>
+                                      <% end %>
+                                    </tbody>
+                                  </table>
+                                  <div>
+                                    <table class="table table-sm">
+                                      <tbody>
+                                        <tr>
+                                          <td class="text-end"><strong>Tổng cộng</strong></td>
+                                          <td class="text-end">
+                                            <%= number_to_currency(cart_items.sum { |item| item[:price] * item[:quantity] }, unit: ' VND', format: '%n %u', precision: 0) %>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                    <p class="text-end">
+                                      <a href="/cart"><strong><i class="fa-solid fa-bag-shopping"></i> Giỏ hàng</strong></a>&nbsp;&nbsp; | &nbsp;&nbsp;
+                                      <% if cart_items.any? %> 
+                                      <a href="/checkout"><strong><i class="fa-solid fa-share"></i> Thanh toán</strong></a>
+                                      <% else %>
+                                      <a href="/cart"><strong><i class="fa-solid fa-share"></i> Thanh toán</strong></a>
+                                      <% end %>
+                                      
+                                    </p>
+                                  </div>
+                                <% else %>
+                                  <p class="text-center">Giỏ hàng của bạn đang trống!</p>
+                                <% end %>
+                              </li>
+                            </ul>
+                          </div>
+                          
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

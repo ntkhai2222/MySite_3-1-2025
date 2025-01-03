@@ -1,0 +1,58 @@
+<!-- <div class="login-box">
+  <div class="login-logo">
+    <b>Admin</b>
+  </div>
+  <div class="login-box-body">
+    <p class="login-box-msg"><b>Forgot your password?</b></p>
+    <%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
+    <%= form_with url: passwords_path do |form| %>
+      <div class="form-group has-feedback">
+        <%= form.email_field :email_address, class: 'form-control', required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="row">
+        <div class="col-xs-2">
+        </div>
+        <div class="col-xs-8">
+          <%= form.submit "Email reset instructions", class: 'btn btn-primary btn-block btn-flat' %>
+        </div>
+        <div class="col-xs-2">
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div> -->
+<%= content_for :title, "Quên mật khẩu" %>
+<main>
+    <div id="account-forgotten" class="container">
+        <%= render 'home/breadcrumb' %>
+        <%= render 'layouts/frontend/alert' %>
+      <div class="row">
+        <div id="content" class="col">
+          <h1>Quên mật khẩu?</h1>
+          <p>Nhập địa chỉ e-mail được liên kết với tài khoản của bạn. Nhấp vào gửi để có một liên kết đặt lại mật khẩu được gửi qua email cho bạn.</p>
+          <%= form_with url: passwords_path do |form| %>
+            <fieldset>
+              <legend>Địa chỉ email của bạn</legend>
+              <div class="row mb-3 required">
+                <%= form.label :email_address, 'Địa chỉ email', class: 'col-sm-2 col-form-label' %>
+                <div class="col-sm-10">
+                  <%= form.text_field :email_address, value: flash[:email], placeholder: 'Địa chỉ email', id: 'input-email', class: 'form-control', required: true, autofocus: true, value: params[:email_address] %>
+                </div>
+              </div>
+            </fieldset>
+            <div class="d-inline-block pt-2 pd-2 w-100">
+              <div class="float-start">
+                <%= link_to 'Quay lại', home_login_path, class: 'btn btn-light' %>
+              </div>
+              <div class="float-end">
+                <%= form.submit 'Tiếp tục', class: 'btn btn-primary' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <%= render 'home/aside' %>
+      </div>
+    </div>
+  </main>
+  
